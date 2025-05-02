@@ -1,7 +1,7 @@
 -- Table to store all information pertaining to the snake
 -- like its segments, its length, its current direction.
 local Direction = require 'src.Direction'
-local Snake = {segments = {}, dir = Direction.STOP}
+local Snake = {segments = {}, dir = Direction.RIGHT}
 
 -- Initialize a new Snake.
 function Snake:new(xPos, yPos)
@@ -31,11 +31,12 @@ end
 -- is one of four values with a corresponding
 -- `{x, y}`-table.
 function Snake:addSegment()
-    local newHead = {
-      x = self:getHead().x + self.dir.x,
-      y = self:getHead().x + self.dir.y
-    }
-    table.insert(self.segments, 1, newHead)
+  local newHead = {
+    x = self:getHead().x + self.dir.x,
+    y = self:getHead().y + self.dir.y
+  }
+  
+  table.insert(self.segments, 1, newHead)
 end
 
 -- Return true if fruit is eaten.
@@ -46,21 +47,22 @@ function Snake:move(board)
   }
 
   -- just debugging
-  -- self.dir = Direction.STOP
+  self.dir = Direction.STOP
 
   -- Check if moved to space
   -- is valid.
-  local nextSpace = find(board, newHead.x, newHead.y)
-  if(nextSpace.value == "#") then return false end
-  if(nextSpace.value == "*") then
-    self:addSegment()
-    return true
-  end
+  local nextSpace = board:find(newHead.x, newHead.y)
+  if(nextSpace.value == "#") then return end
 
   table.remove(self.segments, #self.segments)
   table.insert(self.segments, 1, newHead)
+end
 
-  return false
+function Snake:update(dt, b)
+  for i = 1, #self.segments do
+    b:find(self.segments[i].x, self.segments[i].y).value = "o"
+  end
+  b:find(self:getHead().x, self:getHead().y).value = "^"
 end
 
 return Snake

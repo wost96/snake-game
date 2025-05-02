@@ -3,6 +3,7 @@
 -- own learning experience)
 
 local Direction = {
+  -- Temporary STOP value to not crash the program.
   STOP  = {x = 0, y = 0},
   UP    = {x = 0, y = -1}, 
   DOWN  = {x = 0, y = 1}, 
